@@ -24,6 +24,58 @@ const MapComponent = () => {
   const [markerCoord, setMarkerCoord] = useState<google.maps.LatLng | null>(null);
   const [circle, setCircle] = useState<google.maps.Circle | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [placeMarkers, setPlaceMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
+
+  const getChargingStation = async (coordinates: google.maps.LatLng, map: google.maps.Map) => {
+    const { Place, SearchNearbyRankPreference } = (await google.maps.importLibrary(
+      'places'
+    )) as google.maps.PlacesLibrary;
+    const { AdvancedMarkerElement, PinElement } = (await google.maps.importLibrary(
+      'marker'
+    )) as google.maps.MarkerLibrary;
+
+    // Remove previous place markers
+    placeMarkers.forEach((marker) => (marker.map = null));
+    setPlaceMarkers([]);
+
+    const request = {
+      fields: ['displayName', 'location', 'businessStatus'],
+      locationRestriction: {
+        center: coordinates,
+        radius: range,
+      },
+      includedPrimaryTypes: ['electric_vehicle_charging_station'],
+      maxResultCount: 20,
+      rankPreference: SearchNearbyRankPreference.POPULARITY,
+      language: 'en-US',
+      region: 'us',
+    };
+
+    // @ts-ignore
+    const { places } = await Place.searchNearby(request);
+
+    if (places.length) {
+      const newPlaceMarkers = places.map((place: any) => {
+        const stationIcon = document.createElement('img');
+        stationIcon.src =
+          'https://uxwing.com/wp-content/themes/uxwing/download/transportation-automotive/electric-vehicle-charging-station-icon.png';
+        stationIcon.className = 'station-icon';
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: place.location,
+          title: place.displayName,
+          content: stationIcon,
+        });
+
+        return marker;
+      });
+
+      setPlaceMarkers(newPlaceMarkers);
+    }
+
+    return places;
+  };
 
   const onMapClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
@@ -48,6 +100,8 @@ const MapComponent = () => {
       });
 
       setCircle(newCircle);
+
+      getChargingStation(coordinate, mapRef.current!);
     }
   };
 
@@ -71,7 +125,7 @@ const MapComponent = () => {
               position={markerCoord}
               icon={{
                 url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                scaledSize: new window.google.maps.Size(20, 20),
+                scaledSize: new window.google.maps.Size(26, 26),
               }}
             />
           </>

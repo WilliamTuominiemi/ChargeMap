@@ -26,3 +26,9 @@ body {
     text-wrap: balance;
   }
 }
+
+.station-icon {
+  width: 20px; /* Set the desired width */
+  height: 20px; /* Set the desired height */
+  filter: invert(100%);
+}
