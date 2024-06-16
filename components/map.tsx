@@ -7,19 +7,20 @@ export const defaultMapContainerStyle = {
   height: '100vh',
 };
 
+const defaultMapCenter = {
+  lat: 60.192059,
+  lng: 24.945831,
+};
+
+const defaultMapZoom = 7;
+
+const defaultMapOptions = {
+  mapId: '1c93ead7672f925d',
+  disableDefaultUI: true,
+  zoomControl: true,
+};
+
 const MapComponent = () => {
-  const defaultMapCenter = {
-    lat: 60.192059,
-    lng: 24.945831,
-  };
-
-  const defaultMapZoom = 7;
-
-  const defaultMapOptions = {
-    zoomControl: true,
-    tilt: 0,
-    gestureHandling: 'auto',
-  };
   return (
     <div className="w-full">
       <GoogleMap
@@ -27,7 +28,7 @@ const MapComponent = () => {
         center={defaultMapCenter}
         zoom={defaultMapZoom}
         options={defaultMapOptions}
-      ></GoogleMap>{' '}
+      ></GoogleMap>
     </div>
   );
 };
