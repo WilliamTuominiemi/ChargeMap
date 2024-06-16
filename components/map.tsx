@@ -34,7 +34,13 @@ const MapComponent = () => {
         options={defaultMapOptions}
         onClick={onMapClick}
       >
-        <Marker position={markerCoord} />
+        <Marker
+          position={markerCoord}
+          icon={{
+            url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            scaledSize: new window.google.maps.Size(40, 40),
+          }}
+        />
       </GoogleMap>
     </div>
   );
