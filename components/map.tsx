@@ -1,7 +1,7 @@
 'use client';
 
-import { GoogleMap, Marker, Circle } from '@react-google-maps/api';
-import React, { useState, useRef, useCallback } from 'react';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import React, { useState, useRef } from 'react';
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -34,7 +34,6 @@ const MapComponent = () => {
       'marker'
     )) as google.maps.MarkerLibrary;
 
-    // Remove previous place markers
     placeMarkers.forEach((marker) => (marker.map = null));
     setPlaceMarkers([]);
 
@@ -51,7 +50,6 @@ const MapComponent = () => {
       region: 'us',
     };
 
-    // @ts-ignore
     const { places } = await Place.searchNearby(request);
 
     if (places.length) {
