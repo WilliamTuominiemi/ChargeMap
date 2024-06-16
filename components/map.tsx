@@ -30,9 +30,7 @@ const MapComponent = () => {
     const { Place, SearchNearbyRankPreference } = (await google.maps.importLibrary(
       'places'
     )) as google.maps.PlacesLibrary;
-    const { AdvancedMarkerElement, PinElement } = (await google.maps.importLibrary(
-      'marker'
-    )) as google.maps.MarkerLibrary;
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary('marker')) as google.maps.MarkerLibrary;
 
     placeMarkers.forEach((marker) => (marker.map = null));
     setPlaceMarkers([]);
@@ -53,7 +51,7 @@ const MapComponent = () => {
     const { places } = await Place.searchNearby(request);
 
     if (places.length) {
-      const newPlaceMarkers = places.map((place: any) => {
+      const newPlaceMarkers = places.map((place: google.maps.Place) => {
         const stationIcon = document.createElement('img');
         stationIcon.src =
           'https://uxwing.com/wp-content/themes/uxwing/download/transportation-automotive/electric-vehicle-charging-station-icon.png';
@@ -62,7 +60,7 @@ const MapComponent = () => {
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: place.location,
-          title: place.displayName,
+          title: place.placeId,
           content: stationIcon,
         });
 
